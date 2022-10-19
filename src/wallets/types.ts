@@ -1,12 +1,17 @@
-import {ApiProperty} from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateWalletResponse {
-    @ApiProperty({description: 'Публичный ключ кошелька'})
-    publicKey: string
-    @ApiProperty({description: 'Секретный ключ кошелька'})
-    secretKey: string
-    @ApiProperty({description: 'Мнемоники кошелька'})
-    mnemonic: string[]
-    @ApiProperty({description: 'Non-bounce адрес кошелька'})
-    address: string
+  @ApiProperty({ description: 'Публичный ключ кошелька' })
+  publicKey: string;
+  @ApiProperty({ description: 'Секретный ключ кошелька' })
+  secretKey: string;
+  @ApiProperty({ description: 'Мнемоники кошелька' })
+  mnemonic: string[];
+  @ApiProperty({ description: 'Non-bounce адрес кошелька' })
+  address: string;
+}
+
+export class WalletBalanceResponse {
+  @ApiProperty({ description: 'Баланс' })
+  balance: number;
 }
