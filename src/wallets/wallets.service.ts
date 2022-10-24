@@ -1,8 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import TonWeb from 'tonweb';
-import { generateMnemonic, mnemonicToKeyPair } from 'tonweb-mnemonic';
-import { tonWeb } from '../ton';
-import { CreateWalletResponse, WalletBalanceResponse } from './types';
+import {Injectable} from '@nestjs/common';
+import {generateMnemonic, mnemonicToKeyPair} from 'tonweb-mnemonic';
+import {tonWeb} from '../ton';
+import {CreateWalletResponse, WalletBalanceResponse} from './types';
 
 @Injectable()
 export class WalletsService {
@@ -27,5 +26,31 @@ export class WalletsService {
     const balance = tonWeb.utils.fromNano(await tonWeb.getBalance(address));
 
     return { balance: parseFloat(balance) };
+  }
+
+  public async transfer(sourceWalletAddress: string, secretKey: string, destinationWalletAddress: string, amount: number, comment?: string): Promise<void>  {
+    const destWallet = tonWeb.wallet.create({ address: destinationWalletAddress, wc: 0 });
+    const addr = await destWallet.getAddress();
+
+    const normalizedDestAddress = addr.toString(true, true, false, false);
+
+    const wallet = tonWeb.wallet.create({
+      address: sourceWalletAddress,
+      wc: 0
+    });
+
+    const seqno = await wallet.methods.seqno().call();
+
+    const transfer = await wallet.methods.transfer({
+      secretKey: secretKey,
+      toAddress: normalizedDestAddress,
+      amount: tonWeb.utils.toNano(amount.toString()),
+      seqno: seqno,
+      payload: comment || '',
+      sendMode: 3,
+    });
+    const transfer_result = await transfer.send();
+    console.log('transfer result:')
+    console.log(transfer_result)
   }
 }

@@ -1,12 +1,7 @@
-import { Controller, Get, Post, Query } from '@nestjs/common';
-import {
-  ApiCreatedResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
-import { CreateWalletResponse, WalletBalanceResponse } from './types';
-import { WalletsService } from './wallets.service';
+import {Body, Controller, Get, Post, Query} from '@nestjs/common';
+import {ApiAcceptedResponse, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags,} from '@nestjs/swagger';
+import {CreateWalletResponse, TransferRequest, WalletBalanceResponse} from './types';
+import {WalletsService} from './wallets.service';
 
 @ApiTags('wallets')
 @Controller('/api/v1/wallets')
@@ -27,5 +22,12 @@ export class WalletsController {
     @Query('address') address: string,
   ): Promise<WalletBalanceResponse> {
     return this.walletsService.getWalletBalance(address);
+  }
+
+  @Post("/transfer")
+  @ApiOperation({description: 'Отправка ТОНОВ между кошельками'})
+  @ApiAcceptedResponse({description: 'Запрос на отправку принят'})
+  public async transfer(@Body() data: TransferRequest): Promise<void> {
+    await this.walletsService.transfer(data.sourceWallet, data.secretKey, data.destWallet, data.amount, data.comment);
   }
 }
