@@ -15,10 +15,7 @@ export class WalletsController {
 
   @Post()
   @ApiOperation({ description: 'Создание нового кошелька' })
-  @ApiCreatedResponse({
-    description: 'Новый кошелек успешно создан',
-    type: CreateWalletResponse,
-  })
+  @ApiCreatedResponse({description: 'Новый кошелек успешно создан', type: CreateWalletResponse})
   public async createWallet(): Promise<CreateWalletResponse> {
     return this.walletsService.createWallet();
   }

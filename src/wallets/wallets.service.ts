@@ -23,9 +23,7 @@ export class WalletsService {
     };
   }
 
-  public async getWalletBalance(
-    address: string,
-  ): Promise<WalletBalanceResponse> {
+  public async getWalletBalance(address: string): Promise<WalletBalanceResponse> {
     const balance = tonWeb.utils.fromNano(await tonWeb.getBalance(address));
 
     return { balance: parseFloat(balance) };
