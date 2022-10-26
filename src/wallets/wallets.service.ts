@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {generateMnemonic, mnemonicToKeyPair} from 'tonweb-mnemonic';
-import {tonWeb} from '../ton';
-import {CreateWalletResponse, WalletBalanceResponse} from './types';
+import {tonProvider, tonWeb} from '../ton';
+import {CreateWalletResponse, StateResponse, WalletBalanceResponse} from './types';
 
 @Injectable()
 export class WalletsService {
@@ -28,13 +28,16 @@ export class WalletsService {
     return { balance: parseFloat(balance) };
   }
 
-  public async transfer(sourceWalletAddress: string, secretKey: string, destinationWalletAddress: string, amount: number, comment?: string): Promise<void>  {
+  public async transfer(sourceWalletAddress: string, mnemonic: string[], destinationWalletAddress: string, amount: number, comment?: string): Promise<any>  {
+    const keyPair = await mnemonicToKeyPair(mnemonic);
+
     const destWallet = tonWeb.wallet.create({ address: destinationWalletAddress, wc: 0 });
     const addr = await destWallet.getAddress();
 
     const normalizedDestAddress = addr.toString(true, true, false, false);
 
     const wallet = tonWeb.wallet.create({
+      publicKey: keyPair.publicKey,
       address: sourceWalletAddress,
       wc: 0
     });
@@ -42,7 +45,7 @@ export class WalletsService {
     const seqno = await wallet.methods.seqno().call();
 
     const transfer = await wallet.methods.transfer({
-      secretKey: secretKey,
+      secretKey: keyPair.secretKey,
       toAddress: normalizedDestAddress,
       amount: tonWeb.utils.toNano(amount.toString()),
       seqno: seqno,
@@ -51,6 +54,25 @@ export class WalletsService {
     });
     const transfer_result = await transfer.send();
     console.log('transfer result:')
-    console.log(transfer_result)
+    return transfer_result
+  }
+
+  public async deploy(address: string, mnemonic: string[]) {
+    const keyPair = await mnemonicToKeyPair(mnemonic);
+    const wallet = tonWeb.wallet.create({
+      publicKey: keyPair.publicKey,
+      address: address,
+      wc: 0
+    });
+
+    const dep = await wallet.deploy(keyPair.secretKey);
+    await dep.send();
+  }
+
+  public async getState(address: string): Promise<StateResponse> {
+    console.log(tonProvider)
+    const state = await tonProvider.getAddressInfo(address)
+    console.log(state)
+    return {result: state.state}
   }
 }

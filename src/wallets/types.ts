@@ -20,8 +20,8 @@ export class TransferRequest {
   @ApiProperty({description: 'Адрес кошелька отправителя'})
   sourceWallet: string
 
-  @ApiProperty({description: 'Секретный ключ кошелька отправителя'})
-  secretKey: string
+  @ApiProperty({description: 'mnemonic кошелька отправителя'})
+  mnemonic: string[]
 
   @ApiProperty({description: 'Адрес кошелька получателя'})
   destWallet: string
@@ -31,4 +31,18 @@ export class TransferRequest {
 
   @ApiProperty({description: 'Комментарий к транзакции', example: 'Gift for you', required: false})
   comment?: string
+}
+
+export class DeployWalletRequest {
+
+  @ApiProperty({description: 'Номер кошелька'})
+  wallet: string
+
+  @ApiProperty({description: 'mnemonic кошелька'})
+  mnemonic: string[]
+}
+
+export class StateResponse {
+  @ApiProperty({description: 'Статус адреса', type: String})
+  result: string
 }
