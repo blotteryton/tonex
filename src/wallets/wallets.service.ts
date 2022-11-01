@@ -16,13 +16,13 @@ export class WalletsService {
       publicKey: keyPair.publicKey,
       wc: 0,
     });
-    const address = await wallet.getAddress();
+    const address  = await wallet.getAddress();
 
     return {
       publicKey: this.tonService.getTonWeb().utils.bytesToHex(keyPair.publicKey),
       secretKey: this.tonService.getTonWeb().utils.bytesToHex(keyPair.secretKey),
       mnemonic: mnemonic,
-      address: address.toString(true, true, true, false),
+      address: address.toString(true, true, true, this.tonService.isTest()),
     };
   }
 

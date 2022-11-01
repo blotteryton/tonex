@@ -17,7 +17,7 @@ export class TonService {
         console.log(`Initialize TON PROVIDER. RPC: ${this.getJsonRPCUrl()}, API_KEY: ${this.getAPIKey()}`)
     }
 
-    private isTest(): boolean {
+    public isTest(): boolean {
         return process.env.production == 'false'
     }
 
