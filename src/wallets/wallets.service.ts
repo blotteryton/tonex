@@ -23,6 +23,7 @@ export class WalletsService {
       secretKey: this.tonService.getTonWeb().utils.bytesToHex(keyPair.secretKey),
       mnemonic: mnemonic,
       address: address.toString(true, true, true, this.tonService.isTest()),
+      isTest: this.tonService.isTest()
     };
   }
 

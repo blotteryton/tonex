@@ -9,6 +9,8 @@ export class CreateWalletResponse {
   mnemonic: string[];
   @ApiProperty({ description: 'Non-bounce адрес кошелька' })
   address: string;
+  @ApiProperty({ description: 'Признак тестового кошелька. true если тест' })
+  isTest: boolean;
 }
 
 export class WalletBalanceResponse {
