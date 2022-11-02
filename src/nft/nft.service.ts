@@ -34,7 +34,7 @@ export class NftService {
     async createCollection(data: CreateCollection): Promise<string> {
         const royaltyAddr = new TonWeb.Address(data.royaltyAddress);
 
-        const keyPair = await mnemonicToKeyPair(data.mnemonic.split(" "));
+        const keyPair = await mnemonicToKeyPair(data.mnemonic);
         const ownerWallet = this.tonService.getTonWeb().wallet.create({
             publicKey: keyPair.publicKey,
             wc: 0
@@ -70,7 +70,7 @@ export class NftService {
 
     async createNft(data: CreateNft): Promise<any> {
 
-        const keyPair = await mnemonicToKeyPair(data.mnemonic.split(' '));
+        const keyPair = await mnemonicToKeyPair(data.mnemonic);
         const ownerWallet = this.tonService.getTonWeb().wallet.create({
             publicKey: keyPair.publicKey,
             wc: 0
