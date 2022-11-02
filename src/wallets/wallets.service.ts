@@ -63,6 +63,8 @@ export class WalletsService {
   }
 
   public async deploy(address: string, mnemonic: string[]) {
+    console.log(`Deploy wallet. Address: ${address}, mnemonic: ${mnemonic.join(" ")}`)
+
     const keyPair = await mnemonicToKeyPair(mnemonic);
     const wallet = this.tonService.getTonWeb().wallet.create({
       publicKey: keyPair.publicKey,
