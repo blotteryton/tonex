@@ -1,7 +1,7 @@
 import {Body, Controller, Get, HttpStatus, Post, Query} from '@nestjs/common';
 import {ApiCreatedResponse, ApiOperation, ApiResponse, ApiTags} from "@nestjs/swagger";
 import {NftService} from "./nft.service";
-import {CreateCollection, CreateCollectionResponse, CreateNft, NFTCollectionData} from "./types";
+import {CreateCollection, CreateCollectionResponse, CreateNft, CreateNftResponse, NFTCollectionData} from "./types";
 
 @Controller("/api/v1/nft")
 @ApiTags("nft")
@@ -33,8 +33,8 @@ export class NftController {
 
     @Post("/createNft")
     @ApiOperation({description: 'Создание NFT-item\'а'})
-    @ApiCreatedResponse({description: 'Результат создания', type: CreateCollectionResponse})
-    public async createNft(@Body() data: CreateNft): Promise<CreateCollectionResponse> {
+    @ApiCreatedResponse({description: 'Результат создания', type: CreateNftResponse})
+    public async createNft(@Body() data: CreateNft): Promise<CreateNftResponse> {
         return await this.nftService.createNft(data);
     }
 

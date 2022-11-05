@@ -1,7 +1,7 @@
 import {TonService} from "../ton/ton.service";
 import {Injectable} from "@nestjs/common";
 import {CollectionData, NftItemData} from "tonweb";
-import {CreateCollection, CreateNft} from "./types";
+import {CreateCollection, CreateNft, CreateNftResponse} from "./types";
 import {mnemonicToKeyPair} from "tonweb-mnemonic";
 
 const TonWeb = require('tonweb');
@@ -68,7 +68,7 @@ export class NftService {
         return nftCollectionAddress.toString(true, true, true, false)
     }
 
-    async createNft(data: CreateNft): Promise<any> {
+    async createNft(data: CreateNft): Promise<CreateNftResponse> {
 
         const keyPair = await mnemonicToKeyPair(data.mnemonic);
         const ownerWallet = this.tonService.getTonWeb().wallet.create({
@@ -117,6 +117,7 @@ export class NftService {
         console.log(deploy_result);
         return {
             index: newItemIndex,
+            address: await nftCollection.getNftItemAddressByIndex(newItemIndex)
         }
     }
 }

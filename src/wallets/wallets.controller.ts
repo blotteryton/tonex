@@ -38,7 +38,7 @@ export class WalletsController {
   }
 
   @Post('/deploy')
-  @ApiOperation({description: 'Деплой кошелькау'})
+  @ApiOperation({description: 'Деплой кошелька'})
   @ApiAcceptedResponse({description: 'Запрос принят'})
   public async deploy(@Body() data: DeployWalletRequest): Promise<void> {
     await this.walletsService.deploy(data.wallet, data.mnemonic);

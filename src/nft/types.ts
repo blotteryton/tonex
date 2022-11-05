@@ -55,3 +55,12 @@ export class CreateNft {
     @ApiProperty({description: 'Ссылка на содержимое контента NFT-item\'а'})
     nftItemContentUri: string;
 }
+
+
+export class CreateNftResponse {
+    @ApiProperty({description: 'Индекс NFT-токена в коллекции'})
+    index: number
+
+    @ApiProperty({description: 'Адрес NFT-токена в коллекции'})
+    address: string
+}
