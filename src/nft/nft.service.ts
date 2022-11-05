@@ -117,7 +117,7 @@ export class NftService {
         console.log(deploy_result);
         return {
             index: newItemIndex,
-            address: await nftCollection.getNftItemAddressByIndex(newItemIndex)
+            address: (await nftCollection.getNftItemAddressByIndex(newItemIndex)).toString(true, true, true, this.tonService.isTest())
         }
     }
 }
