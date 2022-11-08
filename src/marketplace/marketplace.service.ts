@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { TonService } from 'src/ton/ton.service';
+import { mnemonicToKeyPair } from 'tonweb-mnemonic';
 import { CreateMarketplaceResponseDto } from './dto/CreateMarketplaceResponseDto';
+import { DeployMartketplaceResponseDto } from './dto/DeployMarketplaceResponse.dto';
 
 const TonWeb = require('tonweb');
 
@@ -28,5 +30,39 @@ export class MarketplaceService {
       ),
       isTest: this.tonService.isTest(),
     };
+  }
+
+  public async deployMarketplace(
+    mnemonic: string[],
+    marketAddress: string,
+    amount: number,
+  ): Promise<DeployMartketplaceResponseDto> {
+    const keyPair = await mnemonicToKeyPair(mnemonic);
+    const ownerWallet = this.tonService.getTonWeb().wallet.create({
+      publicKey: keyPair.publicKey,
+      wc: 0,
+    });
+
+    const seqno = (await ownerWallet.methods.seqno().call()) || 0;
+    console.log({ seqno });
+
+    const marketplaceAddress = new TonWeb.Address(marketAddress);
+    const marketplace = new NftMarketplace(this.tonService.getTonWeb, {
+      ownerAddress: await ownerWallet.getAddress(),
+    });
+
+    const result = await ownerWallet.methods
+      .transfer({
+        secretKey: keyPair.secretKey,
+        toAddress: marketplaceAddress.toString(true, true, false), // non-bounceable
+        amount: TonWeb.utils.toNano(amount.toString()),
+        seqno: seqno,
+        payload: null, // body
+        sendMode: 3,
+        stateInit: (await marketplace.createStateInit()).stateInit,
+      })
+      .send();
+    console.log(result);
+    return result;
   }
 }
