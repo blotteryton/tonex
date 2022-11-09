@@ -118,3 +118,51 @@ export class TransferCollectionRequestDto {
   })
   newOwnerAddress: string;
 }
+
+export class SaleRequestDto {
+  @ApiProperty({
+    description: 'Адрес маркетплейса',
+    required: true,
+  })
+  marketplaceAddress: string;
+
+  @ApiProperty({
+    description: 'Адрес NFT-токена',
+    required: true,
+  })
+  nftAddress: string;
+
+  @ApiProperty({
+    description: 'Полная цена продажи в ТОНах',
+    required: true,
+    example: 1.1,
+  })
+  fullPrice: number;
+
+  @ApiProperty({
+    description: 'Комиссия маркетплейса в ТОНах',
+    required: true,
+    example: 0.2,
+  })
+  marketplaceFee: number;
+
+  @ApiProperty({
+    description: 'Адрес NFT-коллекции',
+    required: true,
+  })
+  collectionAddress: string;
+
+  @ApiProperty({
+    description: 'Комиссия продавцу в ТОНах',
+    required: true,
+    example: 0.1,
+  })
+  royaltyAmount: number;
+}
+
+export class SaleResponseDto {
+  @ApiProperty({
+    description: 'Адрес продажи NFT-токена',
+  })
+  address: string;
+}

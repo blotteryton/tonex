@@ -12,6 +12,8 @@ import {
   CreateNft,
   CreateNftResponse,
   NFTCollectionData,
+  SaleRequestDto,
+  SaleResponseDto,
   TransferCollectionRequestDto,
 } from './types';
 
@@ -66,5 +68,25 @@ export class NftController {
       data.collectionAddress,
       data.newOwnerAddress,
     );
+  }
+
+  @Post('/sale')
+  @ApiOperation({ description: 'Получение адреса для продажи NFT-токена' })
+  @ApiCreatedResponse({
+    description: 'Успешное создание заявки на продажу',
+    type: SaleResponseDto,
+  })
+  public async sale(@Body() data: SaleRequestDto): Promise<SaleResponseDto> {
+    const saleAddress = await this.nftService.sale(
+      data.marketplaceAddress,
+      data.nftAddress,
+      data.fullPrice,
+      data.marketplaceFee,
+      data.collectionAddress,
+      data.royaltyAmount,
+    );
+    return {
+      address: saleAddress,
+    };
   }
 }

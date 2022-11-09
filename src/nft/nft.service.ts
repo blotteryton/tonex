@@ -155,4 +155,28 @@ export class NftService {
       })
       .send();
   }
+
+  public async sale(
+    marketplaceAddress: string,
+    nftAddress: string,
+    fullPrice: number,
+    marketplaceFee: number,
+    collectionAddress: string,
+    royaltyAmount: number,
+  ): Promise<string> {
+    const marketAddress = new TonWeb.Address(marketplaceAddress);
+    const nftItemAddress = new TonWeb.Address(nftAddress);
+    const nftCollectionAddress = new TonWeb.Address(collectionAddress);
+
+    const nftSale = new NftSale(this.tonService.getTonProvider(), {
+      marketplaceAddress: marketAddress,
+      nftAddress: nftItemAddress,
+      fullPrice: TonWeb.utils.toNano(fullPrice.toString()),
+      marketplaceFee: TonWeb.utils.toNano(marketplaceFee.toString()),
+      royaltyAddress: nftCollectionAddress,
+      royaltyAmount: TonWeb.utils.toNano(royaltyAmount.toString()),
+    });
+    const saleAddress = await nftSale.getAddress();
+    return saleAddress.toString(true, true, true, this.tonService.isTest());
+  }
 }
