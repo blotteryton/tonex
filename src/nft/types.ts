@@ -166,3 +166,25 @@ export class SaleResponseDto {
   })
   address: string;
 }
+
+export class SaleDeployDto {
+  @ApiProperty({
+    description: 'mnemonic-фраза кошелька владельца маркетплейса',
+    type: [String],
+    required: true,
+  })
+  mnemonic: string[];
+
+  @ApiProperty({
+    description: 'Адрес NFT-продажи',
+    type: String,
+    required: true,
+  })
+  nftSaleAddress: string;
+
+  @ApiProperty({
+    description:
+      'Адрес NFT-маркетплейса, куда будет размещаться продаваемый токен',
+  })
+  marketAddress: string;
+}

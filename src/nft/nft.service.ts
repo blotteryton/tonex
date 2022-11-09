@@ -179,4 +179,42 @@ export class NftService {
     const saleAddress = await nftSale.getAddress();
     return saleAddress.toString(true, true, true, this.tonService.isTest());
   }
+
+  public async deploySale(
+    mnemonic: string[],
+    nftSaleAddress: string,
+    marketAddress: string,
+  ) {
+    const keyPair = await mnemonicToKeyPair(mnemonic);
+    const marketWallet = this.tonService.getTonWeb().wallet.create({
+      publicKey: keyPair.publicKey,
+      wc: 0,
+    });
+
+    const seqno = (await marketWallet.methods.seqno().call()) || 0;
+    console.log({ seqno });
+
+    const amount = TonWeb.utils.toNano('0.05');
+
+    const nftSale = new NftSale(this.tonService.getTonProvider(), {
+      address: new TonWeb.Address(nftSaleAddress),
+    });
+
+    const body = new TonWeb.boc.Cell();
+    body.bits.writeUint(1, 32); // OP deploy new auction
+    body.bits.writeCoins(amount);
+    body.refs.push((await nftSale.createStateInit()).stateInit);
+    body.refs.push(new TonWeb.boc.Cell());
+
+    return await marketWallet.methods
+      .transfer({
+        secretKey: keyPair.secretKey,
+        toAddress: new TonWeb.Address(marketAddress),
+        amount: amount,
+        seqno: seqno,
+        payload: body,
+        sendMode: 3,
+      })
+      .send();
+  }
 }

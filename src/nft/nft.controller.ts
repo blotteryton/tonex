@@ -12,6 +12,7 @@ import {
   CreateNft,
   CreateNftResponse,
   NFTCollectionData,
+  SaleDeployDto,
   SaleRequestDto,
   SaleResponseDto,
   TransferCollectionRequestDto,
@@ -88,5 +89,18 @@ export class NftController {
     return {
       address: saleAddress,
     };
+  }
+
+  @Post('/deploySale')
+  @ApiOperation({
+    description: 'Деплой заявки на продажу NFT-токена в БЧ',
+  })
+  @ApiCreatedResponse({ description: 'Успешный деплой' })
+  public async deploySale(@Body() data: SaleDeployDto) {
+    return await this.nftService.deploySale(
+      data.mnemonic,
+      data.nftSaleAddress,
+      data.marketAddress,
+    );
   }
 }
