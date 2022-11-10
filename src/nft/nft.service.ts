@@ -194,7 +194,7 @@ export class NftService {
       true,
       this.tonService.isTest(),
     );
-    console.log('SALE ADDRESS result');
+    console.log('SALE ADDRESS ${result}');
     return result;
   }
 
