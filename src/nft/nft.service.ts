@@ -62,8 +62,12 @@ export class NftService {
       wc: 0,
     });
     const transfer_result = await transfer.send();
-    console.log(transfer_result);
-    return nftCollectionAddress.toString(true, true, true, false);
+    console.log('CREATE COLLECTION RESULT');
+    console.log('%j', transfer_result);
+
+    const address = nftCollectionAddress.toString(true, true, true, false);
+    console.log('NFT COLLECTION ADDRESS', address);
+    return address;
   }
 
   async createNft(data: CreateNft): Promise<CreateNftResponse> {
@@ -112,7 +116,9 @@ export class NftService {
     });
 
     const deploy_result = await res.send();
-    console.log(deploy_result);
+    console.log('DEPLOY NFT RESULT');
+    console.log('%j', deploy_result);
+
     return {
       index: newItemIndex,
       address: (
@@ -142,7 +148,7 @@ export class NftService {
       address: nftCollectionAddress,
     });
 
-    return await ownerWallet.methods
+    const result = await ownerWallet.methods
       .transfer({
         secretKey: keyPair.secretKey,
         toAddress: nftCollectionAddress.toString(true, true, true),
@@ -154,6 +160,11 @@ export class NftService {
         sendMode: 3,
       })
       .send();
+
+    console.log('TRANFER COLLECTION RESULT ');
+    console.log('%j', result);
+
+    return result;
   }
 
   public async sale(
@@ -177,7 +188,14 @@ export class NftService {
       royaltyAmount: TonWeb.utils.toNano(royaltyAmount.toString()),
     });
     const saleAddress = await nftSale.getAddress();
-    return saleAddress.toString(true, true, true, this.tonService.isTest());
+    const result = saleAddress.toString(
+      true,
+      true,
+      true,
+      this.tonService.isTest(),
+    );
+    console.log('SALE ADDRESS result');
+    return result;
   }
 
   public async deploySale(
@@ -192,7 +210,6 @@ export class NftService {
     });
 
     const seqno = (await marketWallet.methods.seqno().call()) || 0;
-    console.log({ seqno });
 
     const amount = TonWeb.utils.toNano('0.05');
 
@@ -206,7 +223,7 @@ export class NftService {
     body.refs.push((await nftSale.createStateInit()).stateInit);
     body.refs.push(new TonWeb.boc.Cell());
 
-    return await marketWallet.methods
+    const result = await marketWallet.methods
       .transfer({
         secretKey: keyPair.secretKey,
         toAddress: new TonWeb.Address(marketAddress),
@@ -216,5 +233,9 @@ export class NftService {
         sendMode: 3,
       })
       .send();
+
+    console.log('DEPLOY SALE RESULT ');
+    console.log('%j', result);
+    return result;
   }
 }
