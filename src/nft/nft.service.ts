@@ -63,7 +63,7 @@ export class NftService {
     });
     const transfer_result = await transfer.send();
     console.log('CREATE COLLECTION RESULT');
-    console.log('%j', transfer_result);
+    console.log(transfer_result);
 
     const address = nftCollectionAddress.toString(true, true, true, false);
     console.log('NFT COLLECTION ADDRESS', address);
@@ -117,7 +117,7 @@ export class NftService {
 
     const deploy_result = await res.send();
     console.log('DEPLOY NFT RESULT');
-    console.log('%j', deploy_result);
+    console.log(deploy_result);
 
     return {
       index: newItemIndex,
