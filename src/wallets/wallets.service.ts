@@ -36,11 +36,15 @@ export class WalletsService {
   public async getWalletBalance(
     address: string,
   ): Promise<WalletBalanceResponse> {
+    console.log(`GET WALLET BALANCE for ${address}`);
+
     const balance = this.tonService
       .getTonWeb()
       .utils.fromNano(await this.tonService.getTonWeb().getBalance(address));
 
-    return { balance: parseFloat(balance) };
+    const bal = parseFloat(balance);
+    console.log(`BALANCE: ${bal}`);
+    return { balance: bal };
   }
 
   public async transfer(
@@ -50,6 +54,9 @@ export class WalletsService {
     amount: number,
     comment?: string,
   ): Promise<any> {
+    console.log(
+      `TRANSFER sourceWallet: ${sourceWalletAddress}, mnemonic: ${mnemonic}, destination: ${destinationWalletAddress}, amount: ${amount}, comment: ${comment}`,
+    );
     const keyPair = await mnemonicToKeyPair(mnemonic);
 
     const destWallet = this.tonService
@@ -76,13 +83,13 @@ export class WalletsService {
       sendMode: 3,
     });
     const transfer_result = await transfer.send();
-    console.log(`transfer result: ${transfer_result}`);
+    console.log(`TRANSFER RESULT: ${transfer_result}`);
     return transfer_result;
   }
 
   public async deploy(address: string, mnemonic: string[]) {
     console.log(
-      `Deploy wallet. Address: ${address}, mnemonic: ${mnemonic.join(' ')}`,
+      `DEPLOY WALLET. Address: ${address}, mnemonic: ${mnemonic.join(' ')}`,
     );
 
     const keyPair = await mnemonicToKeyPair(mnemonic);

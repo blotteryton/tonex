@@ -29,6 +29,8 @@ export class NftController {
   public async getCollectionData(
     @Query('address') address: string,
   ): Promise<NFTCollectionData> {
+    console.log('GET /api/v1/nft/getCollectionData');
+
     const data = await this.nftService.getNftCollectionData(address);
     let promise = Promise.resolve({
       nextItemIndex: data.nextItemIndex,
@@ -47,6 +49,8 @@ export class NftController {
   public async createNftCollection(
     @Body() data: CreateCollection,
   ): Promise<CreateCollectionResponse> {
+    console.log('POST /api/v1/nft/createCollection');
+
     const address = await this.nftService.createCollection(data);
     return { address };
   }
@@ -58,12 +62,16 @@ export class NftController {
     type: CreateNftResponse,
   })
   public async createNft(@Body() data: CreateNft): Promise<CreateNftResponse> {
+    console.log('POST /api/v1/nft/createNft');
+
     return await this.nftService.createNft(data);
   }
 
   @Post('/transferCollection')
   @ApiOperation({ description: 'Отправка (смена владельца) коллекции' })
   public async transferCollection(@Body() data: TransferCollectionRequestDto) {
+    console.log('POST /api/v1/nft/transferCollection');
+
     return await this.nftService.transferCollection(
       data.mnemonic,
       data.collectionAddress,
@@ -78,6 +86,8 @@ export class NftController {
     type: SaleResponseDto,
   })
   public async sale(@Body() data: SaleRequestDto): Promise<SaleResponseDto> {
+    console.log('POST /api/v1/nft/sale');
+
     const saleAddress = await this.nftService.sale(
       data.marketplaceAddress,
       data.nftAddress,
@@ -97,6 +107,8 @@ export class NftController {
   })
   @ApiCreatedResponse({ description: 'Успешный деплой' })
   public async deploySale(@Body() data: SaleDeployDto) {
+    console.log('POST /api/v1/nft/deploySale');
+
     return await this.nftService.deploySale(
       data.mnemonic,
       data.nftSaleAddress,

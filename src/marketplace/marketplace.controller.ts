@@ -20,6 +20,8 @@ export class MarketplaceController {
   public async createMarketplace(
     @Body() data: CreateMarketplaceDto,
   ): Promise<CreateMarketplaceResponseDto> {
+    console.log('POST /api/v1/marketplace/createMarketplace');
+
     return await this.marketplaceService.createMarketplace(data.ownerAddress);
   }
 
@@ -30,6 +32,8 @@ export class MarketplaceController {
     type: DeployMartketplaceResponseDto,
   })
   public async deployMarketplace(@Body() data: DeployMarketplaceDto) {
+    console.log('POST /api/v1/marketplace/deployMarketplace');
+
     return await this.marketplaceService.deployMarketplace(
       data.mnemonic,
       data.address,

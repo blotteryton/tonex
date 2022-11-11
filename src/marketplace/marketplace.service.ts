@@ -15,13 +15,14 @@ export class MarketplaceService {
   public async createMarketplace(
     address: string,
   ): Promise<CreateMarketplaceResponseDto> {
+    console.log(`CREATE MARKETPLACE for wallet ${address}`);
     const ownerAddress = new TonWeb.Address(address);
 
     const marketplace = new NftMarketplace(this.tonService.getTonWeb, {
       ownerAddress: ownerAddress,
     });
 
-    return {
+    const result = {
       address: (await marketplace.getAddress()).toString(
         true,
         true,
@@ -30,6 +31,9 @@ export class MarketplaceService {
       ),
       isTest: this.tonService.isTest(),
     };
+
+    console.log(`RESULT: ${result}`);
+    return result;
   }
 
   public async deployMarketplace(
@@ -37,6 +41,9 @@ export class MarketplaceService {
     marketAddress: string,
     amount: number,
   ): Promise<DeployMartketplaceResponseDto> {
+    console.log(
+      `DEPLOY MARKETPLACE. mnemonic: ${mnemonic}, marketAddress: ${marketAddress}, amount: ${amount}`,
+    );
     const keyPair = await mnemonicToKeyPair(mnemonic);
     const ownerWallet = this.tonService.getTonWeb().wallet.create({
       publicKey: keyPair.publicKey,
@@ -62,7 +69,8 @@ export class MarketplaceService {
         stateInit: (await marketplace.createStateInit()).stateInit,
       })
       .send();
-    console.log(result);
+
+    console.log(`RESULT: ${result}`);
     return result;
   }
 }
